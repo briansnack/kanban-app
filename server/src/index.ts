@@ -1,13 +1,13 @@
-import 'dotenv/config';
 import express from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
-import { Pool } from 'pg';
+import { config } from './config';
+import { pool } from './db/pool';
+import { authRouter } from './routes/auth';
 
 const app = express();
 app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 app.get('/health', async (_req, res) => {
   try {
@@ -19,5 +19,11 @@ app.get('/health', async (_req, res) => {
   }
 });
 
-const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => console.log(`API rodando em http://localhost:${port}`));
+app.use('/auth', authRouter);
+
+app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(error);
+  res.status(500).json({ error: 'Erro interno do servidor' });
+});
+
+app.listen(config.port, () => console.log(`API rodando em http://localhost:${config.port}`));
