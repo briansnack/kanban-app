@@ -4,10 +4,16 @@ import cors from 'cors';
 import { config } from './config';
 import { pool } from './db/pool';
 import { authRouter } from './routes/auth';
+import { boardsRouter } from './routes/boards';
+import { listsRouter } from './routes/lists';
+import { cardsRouter } from './routes/cards';
 
 const app = express();
 app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
+app.use('/boards', boardsRouter);
+app.use('/lists', listsRouter);
+app.use('/cards', cardsRouter);
 
 app.get('/health', async (_req, res) => {
   try {
