@@ -7,6 +7,7 @@ import { authRouter } from './routes/auth';
 import { boardsRouter } from './routes/boards';
 import { listsRouter } from './routes/lists';
 import { cardsRouter } from './routes/cards';
+import { membersRouter } from './routes/members';
 
 const app = express();
 app.use(cors({ origin: 'http://localhost:5173' }));
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use('/boards', boardsRouter);
 app.use('/lists', listsRouter);
 app.use('/cards', cardsRouter);
+app.use('/boards', membersRouter);
 
 app.get('/health', async (_req, res) => {
   try {
