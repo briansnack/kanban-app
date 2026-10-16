@@ -1,16 +1,23 @@
-import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthPage } from './pages/AuthPage';
+import { BoardPage } from './pages/BoardPage';
+import { BoardsPage } from './pages/BoardsPage';
 
 function App() {
-  const [status, setStatus] = useState('verificando...');
+  return (
+    <Routes>
+      <Route path="/login" element={<AuthPage mode="login" />} />
+      <Route path="/register" element={<AuthPage mode="register" />} />
 
-  useEffect(() => {
-    fetch('http://localhost:3000/health')
-      .then((r) => r.json())
-      .then((d) => setStatus(d.status))
-      .catch(() => setStatus('erro de conexão'));
-  }, []);
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<BoardsPage />} />
+        <Route path="/boards/:boardId" element={<BoardPage />} />
+      </Route>
 
-  return <h1>Kanban, API: {status}</h1>;
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 export default App;
